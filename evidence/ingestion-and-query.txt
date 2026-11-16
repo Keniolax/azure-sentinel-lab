@@ -1,0 +1,27 @@
+=== Week 13 Sentinel lab: ingestion and query evidence ===
+Recorded: 2026-11-12T21:45:38Z. Workspace seceng-week13-ws (eastus), Free Trial subscription.
+Setup (UTC): Sentinel onboarded and diagnostic setting seceng-week13-activity created 21:38:46;
+rule 8da433ff-6915-4838-ad86-338f6a7ba739 created ~21:39; positive tag write 21:39:11; benign tag write 21:39:13.
+
+=== 1. Every resource-group write ingested for both groups (AzureActivity) ===
+ActivityStatusValue    CorrelationId                         ResourceGroup           TableName      TimeGenerated                 _IsBillable
+---------------------  ------------------------------------  ----------------------  -------------  ----------------------------  -------------
+Start                  2355d300-6b0c-414c-b2dd-efb5807dc35b  SECENG-WEEK13-SIGNAL  2026-11-12T21:37:49.2516322Z  False
+Success                2355d300-6b0c-414c-b2dd-efb5807dc35b  SECENG-WEEK13-SIGNAL  2026-11-12T21:37:50.8922654Z  False
+Start                  26298b64-b9ee-467a-8dfc-1c350295f6b8  SECENG-WEEK13-SIGNAL  2026-11-12T21:39:12.7061556Z  False
+Success                26298b64-b9ee-467a-8dfc-1c350295f6b8  SECENG-WEEK13-SIGNAL  2026-11-12T21:39:13.7530195Z  False
+Start                  b011bdaf-c848-47a8-89ac-a212c9b2632a  SECENG-WEEK13-BASELINE  2026-11-12T21:39:14.9013806Z  False
+Success                b011bdaf-c848-47a8-89ac-a212c9b2632a  SECENG-WEEK13-BASELINE  2026-11-12T21:39:15.9013774Z  False
+
+Positive (signal group tag write): CorrelationId 26298b64-b9ee-467a-8dfc-1c350295f6b8
+Benign (baseline group tag write):  CorrelationId b011bdaf-c848-47a8-89ac-a212c9b2632a
+Also matched: the signal group's own creation write, 2355d300-6b0c-414c-b2dd-efb5807dc35b.
+
+=== 2. notes/week-13-sentinel.kql, unchanged except lookback widened to 2h for this check ===
+ActivityStatusValue    Caller              CorrelationId                         OperationNameValue                                      ResourceGroup         TableName      TimeGenerated
+---------------------  ------------------  ------------------------------------  ------------------------------------------------------  --------------------  -------------  ----------------------------
+Success                <user>  26298b64-b9ee-467a-8dfc-1c350295f6b8  MICROSOFT.RESOURCES/SUBSCRIPTIONS/RESOURCEGROUPS/WRITE  SECENG-WEEK13-SIGNAL  2026-11-12T21:39:13.7530195Z
+Success                <user>  2355d300-6b0c-414c-b2dd-efb5807dc35b  MICROSOFT.RESOURCES/SUBSCRIPTIONS/RESOURCEGROUPS/WRITE  SECENG-WEEK13-SIGNAL  2026-11-12T21:37:50.8922654Z
+
+Result: the query selects the positive correlation ID and does not select the benign one,
+although the benign event was ingested (row above). _IsBillable=False on every row.

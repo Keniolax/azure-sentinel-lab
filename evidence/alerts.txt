@@ -1,0 +1,27 @@
+=== Week 13 Sentinel lab: alert and incident evidence ===
+Recorded: 2026-11-12T21:51:04Z. Rule 8da433ff-6915-4838-ad86-338f6a7ba739: Low, every 5 min, 30 min lookback,
+threshold > 0, one alert per result, CorrelationId mapped as a custom detail.
+
+=== SecurityAlert rows raised by the rule ===
+AlertTime                     CorrId                                EventTime                     Severity    SystemAlertId                         TableName
+----------------------------  ------------------------------------  ----------------------------  ----------  ------------------------------------  -------------
+2026-11-12T21:45:02.2217361Z  2355d300-6b0c-414c-b2dd-efb5807dc35b  2026-11-12T21:37:50.8922654Z  Low         b996f6b9-bcd7-3cec-28c0-210248526027
+2026-11-12T21:49:58.1804408Z  26298b64-b9ee-467a-8dfc-1c350295f6b8  2026-11-12T21:39:13.7530195Z  Low         120d6045-0803-3bfa-24dc-9c67f5be5bd2
+
+=== Incidents and their alerts ===
+1  alert b996f6b9-bcd7-3cec-28c0-210248526027  event 21:37:50  CorrelationId 2355d300 (signal group creation)
+2  alert 120d6045-0803-3bfa-24dc-9c67f5be5bd2  event 21:39:13  CorrelationId 26298b64 (positive tag write)
+3  alert d1a7fb68-3579-3f91-979e-e259e67164d4  event 21:37:50  CorrelationId 2355d300 again: the 21:50 run's
+   30-minute lookback overlapped the 21:45 run. This repeat is the documented lab limit.
+
+=== Benign correlation ID b011bdaf-c848-47a8-89ac-a212c9b2632a in any alert ===
+0
+
+Chain proven for the positive event: tag write 21:39:13 -> AzureActivity (ingested) -> rule run
+-> alert 120d6045 at 21:49:58 -> incident 2. The benign write ingested but raised no alert.
+
+=== Incident count when the events aged out of the window ===
+12 incidents, all Low, from two signal-group events. Created per rule run (UTC):
+21:45 1, 21:50 2, 21:55 2, 22:00 2, 22:04 2, 22:10 2, 22:15 1. Each 5-minute run whose
+30-minute lookback still held an event raised a new alert for it. Screenshots:
+sentinel-rule.png (rule enabled, Low) and sentinel-incidents.png (12 New, Low).

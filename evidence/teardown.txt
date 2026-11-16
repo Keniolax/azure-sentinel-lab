@@ -1,0 +1,18 @@
+=== Week 13 Azure teardown check ===
+Recorded: 2026-11-12T23:24:56Z
+
+=== Resource groups ===
+Name              Location
+----------------  ----------
+<one pre-existing resource group, not part of the lab, name removed>
+
+=== Resources ===
+Name                                  Rg
+------------------------------------  ----------------
+<two pre-existing resources in that group, names removed>
+
+=== Subscription diagnostic settings ===
+(none listed above means none)
+
+=== Soft-deleted Log Analytics workspaces ===
+(none listed above means none)

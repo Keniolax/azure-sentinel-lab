@@ -1,0 +1,8 @@
+// Training signal only: a successful write to the disposable signal resource group.
+// Verified 2026-11-12 against real AzureActivity data in a lab workspace; not a threat claim.
+AzureActivity
+| where TimeGenerated > ago(30m)
+| where ResourceGroup =~ "seceng-week13-signal"
+| where OperationNameValue =~ "Microsoft.Resources/subscriptions/resourcegroups/write"
+| where ActivityStatusValue =~ "Success"
+| project TimeGenerated, Caller, OperationNameValue, ActivityStatusValue, ResourceGroup, CorrelationId

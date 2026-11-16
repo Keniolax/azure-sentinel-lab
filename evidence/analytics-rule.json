@@ -1,0 +1,42 @@
+{
+  "id": "/subscriptions/<subscription-id>/resourceGroups/seceng-week13-lab/providers/Microsoft.OperationalInsights/workspaces/seceng-week13-ws/providers/Microsoft.SecurityInsights/alertRules/8da433ff-6915-4838-ad86-338f6a7ba739",
+  "kind": "Scheduled",
+  "name": "8da433ff-6915-4838-ad86-338f6a7ba739",
+  "properties": {
+    "alertRuleTemplateName": null,
+    "customDetails": {
+      "CorrelationId": "CorrelationId",
+      "Operation": "OperationNameValue"
+    },
+    "description": "Training signal only. Fires on a successful write to the disposable seceng-week13-signal resource group. Not a threat claim.",
+    "displayName": "Week 13 training signal: write to seceng-week13-signal",
+    "enabled": true,
+    "eventGroupingSettings": {
+      "aggregationKind": "AlertPerResult"
+    },
+    "incidentConfiguration": {
+      "createIncident": true,
+      "groupingConfiguration": {
+        "enabled": false,
+        "groupByAlertDetails": null,
+        "groupByCustomDetails": null,
+        "groupByEntities": null,
+        "lookbackDuration": "PT5H",
+        "matchingMethod": "AllEntities",
+        "reopenClosedIncident": false
+      }
+    },
+    "lastModifiedUtc": "2026-11-12T21:38:59.5074716Z",
+    "query": "// Training signal only: a successful write to the disposable signal resource group.\n// Unverified until run against real AzureActivity data; this is not a threat claim.\nAzureActivity\n| where TimeGenerated > ago(30m)\n| where ResourceGroup =~ \"seceng-week13-signal\"\n| where OperationNameValue =~ \"Microsoft.Resources/subscriptions/resourcegroups/write\"\n| where ActivityStatusValue =~ \"Success\"\n| project TimeGenerated, Caller, OperationNameValue, ActivityStatusValue, ResourceGroup, CorrelationId\n",
+    "queryFrequency": "PT5M",
+    "queryPeriod": "PT30M",
+    "severity": "Low",
+    "suppressionDuration": "PT5H",
+    "suppressionEnabled": false,
+    "tactics": null,
+    "techniques": null,
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0
+  },
+  "type": "Microsoft.SecurityInsights/alertRules"
+}
